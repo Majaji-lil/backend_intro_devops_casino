@@ -19,7 +19,7 @@ jobs:
 
       - name: Ejecutar tests del backend
         run: |
-          npm ci
+          npm install
           npm test
 
       - name: Configurar credenciales AWS
