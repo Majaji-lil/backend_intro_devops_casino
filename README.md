@@ -76,7 +76,7 @@ Trabaja en tu **fork**, con ramas `dev` (trabajo) y `deploy` (gatilla el pipelin
 5. **HPA** (autoescalado por CPU) y autorecuperación de pods.
 
 ## Demo Test - VidalCasino
-Pipeline validado: Build → test → push ECR → deploy EKS.
+   Pipeline validado: build → test → push ECR → deploy EKS.
 
 > El backend es **interno** (ClusterIP): nunca se expone a Internet.
 > Transversal (clúster, una sola vez): **Prometheus + Grafana** y el **video**.
