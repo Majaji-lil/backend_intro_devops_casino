@@ -8,6 +8,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: casino-backend
+  EKS_CLUSTER: casino-vidal-cluster
 
 jobs:
   build-push-deploy:
@@ -46,20 +47,11 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:v1.0.0
 
-      - name: Deploy en EC2 backend
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 446584031738.dkr.ecr.us-east-1.amazonaws.com
-            docker pull 446584031738.dkr.ecr.us-east-1.amazonaws.com/casino-backend:latest
-            docker stop casino-backend || true
-            docker rm casino-backend || true
-            docker run -d \
-              --name casino-backend \
-              --restart unless-stopped \
-              -p 3000:3000 \
-              --env-file /home/ec2-user/.env \
-              446584031738.dkr.ecr.us-east-1.amazonaws.com/casino-backend:latest
+      - name: Deploy en EKS
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER
+          kubectl set image deployment/casino-backend casino-backend=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          kubectl rollout status deployment/casino-backend
