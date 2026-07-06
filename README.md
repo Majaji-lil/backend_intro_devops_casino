@@ -78,7 +78,7 @@ Trabaja en tu **fork**, con ramas `dev` (trabajo) y `deploy` (gatilla el pipelin
 ## Demo Test - VidalCasino
    Pipeline validado: build → test → push ECR → deploy EKS.
 
-## Video demo grabado: $06/07/2026
+## Video demo grabado: $06/07/2026 / 04:23 a. m
 
 > El backend es **interno** (ClusterIP): nunca se expone a Internet.
 > Transversal (clúster, una sola vez): **Prometheus + Grafana** y el **video**.
